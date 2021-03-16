@@ -1,18 +1,23 @@
 FROM ubuntu:20.04
+SHELL [ "/bin/bash", "--login", "-c" ]
 WORKDIR /
-RUN apt-get update && apt-get install -y wget
-
-# Install miniconda to /miniconda
-RUN curl -LO http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-RUN bash Miniconda3-latest-Linux-x86_64.sh -p /miniconda -b
-RUN rm Miniconda3-latest-Linux-x86_64.sh
-ENV PATH=/miniconda/bin:${PATH}
-RUN conda update -y conda
 
 # Create pycrown env
-RUN conda env create 
+RUN apt-get update && apt install -y software-properties-common \
+&& apt-get install -y apt-utils 
 
-RUN conda init bash
+RUN add-apt-repository ppa:deadsnakes/ppa -y 
+#&& add-apt-repository ppa:ubuntugis/ppa
 
+RUN apt-get update && apt-get install -y git wget python3.8 \
+python3-pip  gdal-bin libgdal-dev gfortran
+#&& sudo apt-get install -y pdal \
 
+RUN git clone https://github.com/manaakiwhenua/pycrown.git
+
+RUN python3 -m pip install --upgrade pip && pip3 --version
+
+RUN pip3 install -r /pycrown/requirements.txt \
+&& cp /pycrown/requirements.txt . \
+&& python3 /pycrown/setup.py install --verbose
 

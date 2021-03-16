@@ -17,7 +17,8 @@ RUN git clone https://github.com/manaakiwhenua/pycrown.git
 
 RUN python3 -m pip install --upgrade pip && pip3 --version
 
-RUN pip3 install -r /pycrown/requirements.txt \
-&& cp /pycrown/requirements.txt . \
+RUN cd pycrown \
+&& ls pycrown \ 
+&& pip3 install -r requirements.txt \
 && python3 /pycrown/setup.py install --verbose
 
